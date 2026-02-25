@@ -221,8 +221,9 @@ Each event data contains: ID|Title|Description|Timestamp|Priority|Completion Sta
 
 ## Development
 
-### Project Structure
-'''
+---
+## Project Structure
+'''text
 event-reminder-system/
 ├── include/           # Header files
 │   ├── Event.h
@@ -243,7 +244,7 @@ event-reminder-system/
 ├── build.bat         # Windows build script
 └── README.md         # This file
 '''
-
+---
 ### Contributing
 
 1. Fork the repository
