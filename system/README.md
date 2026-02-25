@@ -222,7 +222,7 @@ Each event data contains: ID|Title|Description|Timestamp|Priority|Completion Sta
 ## Development
 
 ### Project Structure
-\`\`\`
+'''
 event-reminder-system/
 ├── include/           # Header files
 │   ├── Event.h
@@ -242,7 +242,7 @@ event-reminder-system/
 ├── build.sh          # Linux/Unix build script
 ├── build.bat         # Windows build script
 └── README.md         # This file
-\`\`\`
+'''
 
 ### Contributing
 
