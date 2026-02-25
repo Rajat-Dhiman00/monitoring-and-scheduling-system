@@ -263,10 +263,6 @@ event-reminder-system/
 - Event categories and tags
 - Import/export functionality (CSV, iCal)
 
-## License
-
-This project is released under the MIT License. See LICENSE file for details.
-
 ## Support
 
 For issues, questions, or contributions, please create an issue in the project repository.
