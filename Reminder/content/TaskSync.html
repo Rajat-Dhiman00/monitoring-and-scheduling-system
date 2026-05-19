@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskSync — Smart Event Reminder</title>
+    <meta name="description" content="Premium AI-style Event Reminder &amp; Task Manager with live calendar, clock, and analytics.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- ===== INTRO OVERLAY ===== -->
+<div class="intro-overlay" id="introOverlay">
+    <div class="intro-content glass">
+        <div class="intro-icon-wrap"><span class="material-icons-round">task_alt</span></div>
+        <h1 class="intro-title">Welcome to TaskSync</h1>
+        <p class="intro-desc">Experience a premium AI-style Event Reminder & Task Manager ecosystem.</p>
+        <button class="btn-primary intro-btn" id="introStartBtn">
+            Enter Workspace <span class="material-icons-round">arrow_forward</span>
+        </button>
+    </div>
+</div>
+<div class="app-shell">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon-wrap"><span class="material-icons-round">task_alt</span></div>
+            <span class="brand-name">TaskSync</span>
+        </div>
+
+        <!-- Live Clock -->
+        <div class="sidebar-clock">
+            <canvas id="analogClock" width="100" height="100"></canvas>
+            <div class="digital-time" id="digitalTime">00:00:00</div>
+            <div class="digital-date" id="digitalDate">Monday, 1 Jan</div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <span class="nav-label">Navigation</span>
+            <ul id="navLinks">
+                <li class="nav-item active" data-target="dashboard">
+                    <span class="material-icons-round">space_dashboard</span>
+                    <span>Dashboard</span>
+                </li>
+                <li class="nav-item" data-target="calendar-view">
+                    <span class="material-icons-round">calendar_month</span>
+                    <span>Calendar</span>
+                </li>
+                <li class="nav-item" data-target="analytics">
+                    <span class="material-icons-round">insights</span>
+                    <span>Analytics</span>
+                </li>
+                <li class="nav-item" data-target="dsa-view">
+                    <span class="material-icons-round">account_tree</span>
+                    <span>DSA Lab</span>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="stats-mini">
+                <div class="mini-stat">
+                    <span id="sidebarPending">0</span>
+                    <span>Pending</span>
+                </div>
+                <div class="mini-stat">
+                    <span id="sidebarDone">0</span>
+                    <span>Done</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <main class="main-area">
+
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="icon-btn" id="sidebarToggle" title="Toggle Sidebar">
+                    <span class="material-icons-round">menu</span>
+                </button>
+                <div class="greeting-block">
+                    <h2 id="greetingText">Good Morning!</h2>
+                    <p id="greetingDate">Here's your schedule for today.</p>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <!-- Pomodoro Timer -->
+                <div class="pomodoro-widget" id="pomodoroWidget">
+                    <button class="pomo-toggle" id="pomoToggle" title="Pomodoro Timer">
+                        <span class="material-icons-round">timer</span>
+                        <span id="pomoDisplay">25:00</span>
+                    </button>
+                    <div class="pomo-panel" id="pomoPanel">
+                        <div class="pomo-header">
+                            <span class="pomo-mode" id="pomoMode">Focus</span>
+                            <div class="pomo-dots">
+                                <span class="pomo-dot active" id="pd1"></span><span class="pomo-dot" id="pd2"></span>
+                                <span class="pomo-dot" id="pd3"></span><span class="pomo-dot" id="pd4"></span>
+                            </div>
+                        </div>
+                        <div class="pomo-circle">
+                            <svg viewBox="0 0 100 100" width="120" height="120">
+                                <circle cx="50" cy="50" r="44" fill="none" stroke="var(--border)" stroke-width="6"/>
+                                <circle id="pomoRing" cx="50" cy="50" r="44" fill="none" stroke="var(--accent)" stroke-width="6"
+                                    stroke-dasharray="276.46" stroke-dashoffset="0" stroke-linecap="round"
+                                    transform="rotate(-90 50 50)" style="transition:stroke-dashoffset 1s linear;"/>
+                            </svg>
+                            <div class="pomo-time-big" id="pomoTimeBig">25:00</div>
+                        </div>
+                        <div class="pomo-controls">
+                            <button class="pomo-btn" id="pomoStart"><span class="material-icons-round">play_arrow</span></button>
+                            <button class="pomo-btn" id="pomoPause"><span class="material-icons-round">pause</span></button>
+                            <button class="pomo-btn" id="pomoReset"><span class="material-icons-round">refresh</span></button>
+                        </div>
+                        <select class="ctrl-select" id="pomoTask" style="width:100%;margin-top:.5rem;font-size:.78rem;"><option value="">— Link to task —</option></select>
+                    </div>
+                </div>
+                <!-- Notify Bell -->
+                <button class="icon-btn" id="notifyBtn" title="Enable Notifications">
+                    <span class="material-icons-round">notifications</span>
+                </button>
+                <!-- Theme Picker -->
+                <div class="theme-picker">
+                    <button class="icon-btn" id="themeBtn" title="Change Theme">
+                        <span class="material-icons-round">palette</span>
+                    </button>
+                    <div class="theme-dropdown" id="themeDropdown">
+                        <div class="theme-grid">
+                            <button class="theme-swatch" data-theme="dark" title="Dark (Default)">
+                                <div class="swatch-preview dark-preview"></div>
+                                <span>Dark</span>
+                            </button>
+                            <button class="theme-swatch" data-theme="light" title="Light Mode">
+                                <div class="swatch-preview light-preview"></div>
+                                <span>Light</span>
+                            </button>
+                            <button class="theme-swatch" data-theme="hr-ppt" title="Azure Blue">
+                                <div class="swatch-preview hr-ppt-preview"></div>
+                                <span>Azure</span>
+                            </button>
+                            <button class="theme-swatch" data-theme="hr-warm" title="Warm Beige">
+                                <div class="swatch-preview hr-warm-preview"></div>
+                                <span>Warm</span>
+                            </button>
+                            <button class="theme-swatch" data-theme="ocean" title="Ocean Blue">
+                                <div class="swatch-preview ocean-preview"></div>
+                                <span>Ocean</span>
+                            </button>
+                            <button class="theme-swatch" data-theme="midnight" title="Midnight Purple">
+                                <div class="swatch-preview midnight-preview"></div>
+                                <span>Night</span>
+                            </button>
+                            <button class="theme-swatch" data-theme="rose" title="Rose Gold">
+                                <div class="swatch-preview rose-preview"></div>
+                                <span>Rose</span>
+                            </button>
+                            <button class="theme-swatch" data-theme="hacker" title="Hacker Green">
+                                <div class="swatch-preview hacker-preview"></div>
+                                <span>Hacker</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-primary" id="createTaskBtn">
+                    <span class="material-icons-round">add</span>
+                    New Task
+                </button>
+            </div>
+        </header>
+
+        <!-- ===== DASHBOARD SECTION ===== -->
+        <section class="content-section active-section" id="dashboard">
+
+            <!-- Urgent Banner -->
+            <div class="urgent-banner" id="urgentBanner" style="display:none">
+                <div class="pulse-dot"></div>
+                <span class="material-icons-round">notifications_active</span>
+                <div class="banner-text">
+                    <strong id="urgentTitle">Task</strong>
+                    <span id="urgentTime"></span>
+                </div>
+                <button class="btn-ghost" id="urgentDoneBtn">Mark Done ✓</button>
+            </div>
+
+            <!-- Stats row -->
+            <div class="stats-row">
+                <div class="stat-card glass" id="statPending">
+                    <div class="stat-icon"><span class="material-icons-round">pending_actions</span></div>
+                    <div>
+                        <div class="stat-num" id="pendingCount">0</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                </div>
+                <div class="stat-card glass" id="statUrgent">
+                    <div class="stat-icon urgent"><span class="material-icons-round">priority_high</span></div>
+                    <div>
+                        <div class="stat-num" id="urgentCount">0</div>
+                        <div class="stat-label">High Priority</div>
+                    </div>
+                </div>
+                <div class="stat-card glass" id="statDone">
+                    <div class="stat-icon done"><span class="material-icons-round">done_all</span></div>
+                    <div>
+                        <div class="stat-num" id="completedCount">0</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="stat-card glass" id="statOverdue">
+                    <div class="stat-icon overdue"><span class="material-icons-round">event_busy</span></div>
+                    <div>
+                        <div class="stat-num" id="overdueCount">0</div>
+                        <div class="stat-label">Overdue</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Controls + List -->
+            <div class="task-panel glass">
+                <div class="task-panel-header">
+                    <h3>All Tasks</h3>
+                    <div class="task-controls">
+                        <div class="search-wrap">
+                            <span class="material-icons-round">search</span>
+                            <input type="text" id="searchInput" placeholder="Search tasks…">
+                        </div>
+                        <select id="filterStatus" class="ctrl-select">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="overdue">Overdue</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <select id="sortSelect" class="ctrl-select">
+                            <option value="priority">By Priority</option>
+                            <option value="date">By Date</option>
+                            <option value="title">By Title</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="task-list" id="taskList"></div>
+            </div>
+        </section>
+
+        <!-- ===== CALENDAR SECTION ===== -->
+        <section class="content-section" id="calendar-view">
+            <div class="cal-panel glass">
+                <div class="cal-panel-header">
+                    <h3><span class="material-icons-round">calendar_month</span> Schedule</h3>
+                    <p>Click any date to add a new event instantly.</p>
+                </div>
+                <div id="calendar"></div>
+            </div>
+        </section>
+
+            <!-- ===== ANALYTICS SECTION ===== -->
+            <section class="content-section" id="analytics">
+            <div class="analytics-grid">
+                <div class="chart-card glass">
+                    <h3>Status Breakdown</h3>
+                    <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+                </div>
+                <div class="chart-card glass">
+                    <h3>Priority Distribution</h3>
+                    <div class="chart-wrap"><canvas id="priorityChart"></canvas></div>
+                </div>
+                <div class="chart-card glass wide">
+                    <h3>Tasks This Week</h3>
+                    <div class="chart-wrap"><canvas id="weekChart"></canvas></div>
+                </div>
+            </div>
+        </section>
+
+            <!-- ===== DSA LAB SECTION ===== -->
+            <section class="content-section" id="dsa-view">
+                <div class="dsa-header">
+                    <h2>🧠 DSA Lab — Live Visualizer</h2>
+                    <p>See exactly how your tasks are stored and processed using Data Structures.</p>
+                </div>
+                <div class="dsa-tabs">
+                    <button class="dsa-tab active" data-dsa="heap">Priority Queue (Heap)</button>
+                    <button class="dsa-tab" data-dsa="linkedlist">Linked List</button>
+                    <button class="dsa-tab" data-dsa="stack">Stack (Undo)</button>
+                    <button class="dsa-tab" data-dsa="binsearch">Binary Search</button>
+                    <button class="dsa-tab" data-dsa="sorting">Sorting Algorithms</button>
+                </div>
+
+                <!-- Heap -->
+                <div class="dsa-panel active-dsa glass" id="dsa-heap">
+                    <div class="dsa-info">
+                        <strong>Max-Heap / Priority Queue</strong>
+                        <span>Tasks are inserted into a max-heap by priority. The root is always the most urgent task. Time: O(log n) insert/delete.</span>
+                    </div>
+                    <div class="dsa-controls">
+                        <button class="btn-primary" id="heapBuildBtn">Build Heap from Tasks</button>
+                        <button class="btn-ghost" id="heapExtractBtn">Extract Max (Poll)</button>
+                    </div>
+                    <canvas id="heapCanvas"></canvas>
+                    <div class="dsa-log" id="heapLog"></div>
+                </div>
+
+                <!-- Linked List -->
+                <div class="dsa-panel glass" id="dsa-linkedlist">
+                    <div class="dsa-info">
+                        <strong>Singly Linked List</strong>
+                        <span>Tasks are stored as linked nodes. Insert at head is O(1). Traversal is O(n). This mirrors the EventManager.cpp backend.</span>
+                    </div>
+                    <div class="dsa-controls">
+                        <button class="btn-primary" id="llBuildBtn">Build List from Tasks</button>
+                        <button class="btn-ghost" id="llSearchBtn">Animate Traversal</button>
+                    </div>
+                    <div class="ll-canvas-wrap" id="llCanvas"></div>
+                    <div class="dsa-log" id="llLog"></div>
+                </div>
+
+                <!-- Stack -->
+                <div class="dsa-panel glass" id="dsa-stack">
+                    <div class="dsa-info">
+                        <strong>Stack — Undo / Redo</strong>
+                        <span>Every task action (create, edit, delete) is pushed onto a stack. Undo pops the last operation. Time: O(1) push/pop.</span>
+                    </div>
+                    <div class="dsa-controls">
+                        <button class="btn-primary" id="undoBtn"><span class="material-icons-round">undo</span> Undo Last Action</button>
+                        <button class="btn-ghost" id="redoBtn"><span class="material-icons-round">redo</span> Redo</button>
+                    </div>
+                    <div class="stack-visual" id="stackVisual"></div>
+                    <div class="dsa-log" id="stackLog"></div>
+                </div>
+
+                <!-- Binary Search -->
+                <div class="dsa-panel glass" id="dsa-binsearch">
+                    <div class="dsa-info">
+                        <strong>Binary Search on Sorted Tasks</strong>
+                        <span>Tasks are sorted by title alphabetically. Binary search finds any task in O(log n) steps instead of O(n) linear scan.</span>
+                    </div>
+                    <div class="dsa-controls">
+                        <input type="text" id="bsInput" class="search-wrap" placeholder="Type task title to search…" style="padding:.5rem 1rem;border-radius:8px;background:var(--bg3);border:1px solid var(--border);color:var(--text);font-size:.85rem;outline:none;">
+                        <button class="btn-primary" id="bsRunBtn">Run Binary Search</button>
+                    </div>
+                    <div class="bs-array" id="bsArray"></div>
+                    <div class="dsa-log" id="bsLog"></div>
+                </div>
+
+                <!-- Sorting -->
+                <div class="dsa-panel glass" id="dsa-sorting">
+                    <div class="dsa-info">
+                        <strong>Sorting Algorithm Visualizer</strong>
+                        <span>Watch Bubble Sort, Selection Sort and Merge Sort run on your task list, animated step by step.</span>
+                    </div>
+                    <div class="dsa-controls">
+                        <select class="ctrl-select" id="sortAlgoSelect">
+                            <option value="bubble">Bubble Sort</option>
+                            <option value="selection">Selection Sort</option>
+                            <option value="merge">Merge Sort</option>
+                        </select>
+                        <select class="ctrl-select" id="sortFieldSelect">
+                            <option value="priority">Sort by Priority</option>
+                            <option value="title">Sort by Title</option>
+                        </select>
+                        <button class="btn-primary" id="sortRunBtn">▶ Run Animation</button>
+                        <button class="btn-ghost" id="sortResetBtn">Reset</button>
+                    </div>
+                    <div class="sort-bars" id="sortBars"></div>
+                    <div class="dsa-log" id="sortLog"></div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ===== TASK MODAL ===== -->
+    <div class="modal-backdrop" id="modalBackdrop">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalTitle">New Task</h3>
+                <button class="icon-btn" id="closeModal"><span class="material-icons-round">close</span></button>
+            </div>
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                <div class="form-group">
+                    <label for="taskTitle">Task Title *</label>
+                    <input type="text" id="taskTitle" placeholder="What needs to be done?" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDate">Due Date & Time *</label>
+                        <input type="datetime-local" id="taskDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskPriority">Priority</label>
+                        <select id="taskPriority">
+                            <option value="high">🔴 High</option>
+                            <option value="medium" selected>🟡 Medium</option>
+                            <option value="low">🟢 Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="taskCategory">Category</label>
+                    <select id="taskCategory">
+                        <option value="work">💼 Work</option>
+                        <option value="personal">🏠 Personal</option>
+                        <option value="study">📚 Study</option>
+                        <option value="health">❤️ Health</option>
+                        <option value="other">📌 Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="taskDesc">Description</label>
+                    <textarea id="taskDesc" rows="2" placeholder="Optional notes…"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Subtasks</label>
+                    <div class="subtask-input-row">
+                        <input type="text" id="subtaskInput" placeholder="Add a subtask…">
+                        <button type="button" class="btn-ghost" id="addSubtaskBtn">Add</button>
+                    </div>
+                    <div class="subtask-list" id="subtaskList"></div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-ghost" id="cancelModal">Cancel</button>
+                    <button type="submit" class="btn-primary"><span class="material-icons-round">save</span> Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+<!-- ===== RIGHT SLIDE PANEL ===== -->
+<button class="right-panel-trigger" id="rpTrigger" title="Open Panel">
+    <span class="material-icons-round">chevron_left</span>
+    PANEL
+</button>
+<div class="rp-backdrop" id="rpBackdrop"></div>
+<div class="right-panel" id="rightPanel">
+    <div class="rp-header">
+        <h3><span class="material-icons-round">dashboard_customize</span> Quick Panel</h3>
+        <button class="icon-btn" id="rpClose"><span class="material-icons-round">close</span></button>
+    </div>
+    <div class="rp-tabs">
+        <button class="rp-tab active" data-rp="overview">Overview</button>
+        <button class="rp-tab" data-rp="upcoming">Upcoming</button>
+        <button class="rp-tab" data-rp="dsa">DSA Ref</button>
+        <button class="rp-tab" data-rp="export">Export</button>
+    </div>
+    <div class="rp-body" id="rpBody"></div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/customParseFormat.js"></script>
+<script src="script.js"></script>
+<script src="../dsa/dsa.js"></script>
+</body>
+</html>

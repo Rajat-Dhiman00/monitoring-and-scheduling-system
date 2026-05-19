@@ -1,0 +1,154 @@
+/* ===== CSS VARIABLES / THEMES ===== */
+:root, [data-theme="dark"] {
+    --bg: #0f1117;
+    --bg2: #1a1d27;
+    --bg3: #22263a;
+    --surface: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.1);
+    --text: #e8ecf4;
+    --text-muted: #7b8299;
+    --accent: #4f8ef7;
+    --accent-hover: #3a7aef;
+    --sidebar-bg: #13151f;
+    --high: #ff5f6d;
+    --medium: #f8c23a;
+    --low: #2dd4a0;
+    --overdue: #ff5f6d;
+    --shadow: 0 8px 32px rgba(0,0,0,0.4);
+    --radius: 14px;
+    --radius-sm: 8px;
+}
+[data-theme="light"] {
+    --bg: #f0f2f8;
+    --bg2: #ffffff;
+    --bg3: #e8ecf6;
+    --surface: rgba(255,255,255,0.8);
+    --border: rgba(0,0,0,0.1);
+    --text: #1a1d2e;
+    --text-muted: #6b7280;
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+    --sidebar-bg: #1e2240;
+    --shadow: 0 4px 24px rgba(0,0,0,0.1);
+    --high: #ff5f6d;
+    --medium: #f8c23a;
+    --low: #2dd4a0;
+    --overdue: #ff5f6d;
+    --radius: 14px;
+    --radius-sm: 8px;
+}
+[data-theme="hr-ppt"] {
+    --bg: #0d1b2a;
+    --bg2: #112240;
+    --bg3: #1a3356;
+    --surface: rgba(255,255,255,0.06);
+    --border: rgba(100,180,255,0.15);
+    --text: #e8f4fd;
+    --text-muted: #7bafd4;
+    --accent: #00b4d8;
+    --accent-hover: #0096b7;
+    --sidebar-bg: #091525;
+    --high: #ff6b6b;
+    --medium: #ffd166;
+    --low: #06d6a0;
+    --shadow: 0 8px 32px rgba(0,50,100,0.4);
+    --radius: 14px;
+    --radius-sm: 8px;
+}
+[data-theme="hr-warm"] {
+    --bg: #fdf6ee;
+    --bg2: #ffffff;
+    --bg3: #f0e6d6;
+    --surface: rgba(255,255,255,0.85);
+    --border: rgba(180,140,100,0.2);
+    --text: #4a3728;
+    --text-muted: #8c7060;
+    --accent: #c8864a;
+    --accent-hover: #b07038;
+    --sidebar-bg: #4a3728;
+    --high: #ff5f6d;
+    --medium: #f8c23a;
+    --low: #2dd4a0;
+    --shadow: 0 4px 20px rgba(100,60,20,0.15);
+    --radius: 14px;
+    --radius-sm: 8px;
+}
+[data-theme="ocean"] {
+    --bg: #e8f4fd;
+    --bg2: #ffffff;
+    --bg3: #d0e8f8;
+    --surface: rgba(255,255,255,0.85);
+    --border: rgba(0,100,180,0.15);
+    --text: #0a2540;
+    --text-muted: #4a7ca0;
+    --accent: #0077b6;
+    --accent-hover: #005f8a;
+    --sidebar-bg: #003566;
+    --high: #ff5f6d;
+    --medium: #f8c23a;
+    --low: #2dd4a0;
+    --shadow: 0 4px 20px rgba(0,100,200,0.15);
+    --radius: 14px;
+    --radius-sm: 8px;
+}
+[data-theme="midnight"] {
+    --bg: #12001e;
+    --bg2: #1e0035;
+    --bg3: #2a004a;
+    --surface: rgba(180,100,255,0.07);
+    --border: rgba(180,100,255,0.2);
+    --text: #ebd5ff;
+    --text-muted: #9b72c8;
+    --accent: #b44dff;
+    --accent-hover: #9c33ee;
+    --sidebar-bg: #0d0018;
+    --high: #ff5f6d;
+    --medium: #f8c23a;
+    --low: #2dd4a0;
+    --shadow: 0 8px 32px rgba(100,0,200,0.3);
+    --radius: 14px;
+    --radius-sm: 8px;
+}
+[data-theme="rose"] {
+    --bg: #1a0a0f;
+    --bg2: #2a1020;
+    --bg3: #3d1830;
+    --surface: rgba(255,100,150,0.07);
+    --border: rgba(255,150,180,0.18);
+    --text: #ffe4ef;
+    --text-muted: #c47090;
+    --accent: #ff4d8d;
+    --accent-hover: #e0357a;
+    --sidebar-bg: #110008;
+    --high: #ff6b6b;
+    --medium: #ffb347;
+    --low: #7ef7a0;
+    --shadow: 0 8px 32px rgba(180,0,80,0.35);
+    --radius: 14px;
+    --radius-sm: 8px;
+}
+[data-theme="hacker"] {
+    --bg: #0a0f0a;
+    --bg2: #0d160d;
+    --bg3: #112011;
+    --surface: rgba(0,255,70,0.05);
+    --border: rgba(0,255,70,0.15);
+    --text: #00ff46;
+    --text-muted: #3a8a3a;
+    --accent: #00e63d;
+    --accent-hover: #00c234;
+    --sidebar-bg: #050a05;
+    --high: #ff4444;
+    --medium: #ffcc00;
+    --low: #00ff46;
+    --shadow: 0 8px 32px rgba(0,200,50,0.2);
+    --radius: 14px;
+    --radius-sm: 8px;
+}
+
+/* Hacker special styling */
+[data-theme="hacker"] { font-family: "Courier New", monospace; }
+[data-theme="hacker"] .brand-name { text-shadow: 0 0 10px #00ff46; }
+[data-theme="hacker"] .btn-primary { box-shadow: 0 0 12px rgba(0,255,70,.4); }
+[data-theme="hacker"] .stat-num { text-shadow: 0 0 8px currentColor; }
+[data-theme="hacker"] .task-title { text-shadow: 0 0 4px rgba(0,255,70,.3); }

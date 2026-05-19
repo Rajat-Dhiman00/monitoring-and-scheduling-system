@@ -1,0 +1,6 @@
+/* ===== ANALYTICS SECTION ===== */
+.analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.chart-card { padding: 1.3rem; }
+.chart-card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 1rem; }
+.chart-card.wide { grid-column: 1 / -1; }
+.chart-wrap { height: 250px; position: relative; }
